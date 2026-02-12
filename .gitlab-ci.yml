@@ -6,9 +6,6 @@ variables:
   IMAGE: "$YCR_IMAGE:$IMAGE_TAG"
 
 
-
-
-
 build:
   stage: build
   image:
