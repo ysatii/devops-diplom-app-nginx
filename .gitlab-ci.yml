@@ -9,74 +9,45 @@ variables:
 
 
 build:
-
   stage: build
-
   image:
-
     name: gcr.io/kaniko-project/executor:debug
-
     entrypoint: [""]
-
   script:
-
     - mkdir -p /kaniko/.docker
-
     - |
-
       cat > /kaniko/.docker/config.json <<EOF
-
       {
-
         "auths": {
-
           "cr.yandex": {
-
             "username": "oauth",
-
             "password": "${YC_OAUTH_TOKEN}"
-
           }
-
         }
-
       }
-
       EOF
-
+    - echo "YCR_IMAGE=$YCR_IMAGE"
+    - echo "IMAGE=$IMAGE"
     - /kaniko/executor
-
       --context "$CI_PROJECT_DIR/test-app-nginx"
-
       --dockerfile "$CI_PROJECT_DIR/test-app-nginx/Dockerfile"
-
       --destination "$IMAGE"
 
 
 
 deploy:
-
   stage: deploy
-
   image: bitnami/kubectl:latest
-
   needs: ["build"]
-
   rules:
-
     - if: '$CI_COMMIT_BRANCH == "main"'
-
   script:
-
     - mkdir -p ~/.kube
-
     - echo "$KUBE_CONFIG_B64" | base64 -d > ~/.kube/config
 
 
 
     # Если манифесты уже применены — достаточно обновить образ:
-
     - kubectl -n testapp set image deployment/testapp testapp="$IMAGE"
-
     - kubectl -n testapp rollout status deployment/testapp
 
