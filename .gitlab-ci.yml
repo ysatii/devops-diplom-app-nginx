@@ -2,7 +2,7 @@ stages: [build, deploy]
 
 
 variables:
-  IMAGE_TAG: "$CI_COMMIT_SHORT_SHA"
+  IMAGE_TAG: "v1.${CI_PIPELINE_IID}"
   IMAGE: "$YCR_IMAGE:$IMAGE_TAG"
 
 
