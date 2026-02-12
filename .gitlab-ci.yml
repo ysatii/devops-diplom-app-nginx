@@ -43,13 +43,12 @@ deploy:
   needs: ["build"]
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-script:
-  - mkdir -p ~/.kube
-  - printf '%s' "$KUBE_CONFIG_B64" | base64 -d > ~/.kube/config
-  - kubectl config set-cluster kubernetes --insecure-skip-tls-verify=true
-  - kubectl -n testapp set image deployment/testapp testapp="$IMAGE"
-  - kubectl -n testapp rollout status deployment/testapp
-
+  script:
+    - mkdir -p ~/.kube
+    - printf '%s' "$KUBE_CONFIG_B64" | base64 -d > ~/.kube/config
+    - kubectl config set-cluster kubernetes --insecure-skip-tls-verify=true
+    - kubectl -n testapp set image deployment/testapp testapp="$IMAGE"
+    - kubectl -n testapp rollout status deployment/testapp
 
 
 
